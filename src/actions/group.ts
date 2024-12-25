@@ -5,273 +5,435 @@ import { db } from "@/lib/prisma";
 import { z } from "zod";
 import { v4 } from "uuid";
 import { authUser } from "./auth";
-import { lightningCssTransformStyleAttribute } from "next/dist/build/swc/generated-native";
+import { revalidatePath } from "next/cache";
+import { UPDATE_ATTRIBUTES_TYPE } from "@/hooks/group";
 
 export const getAffiliateInfo = async ({
-    affiliate,
+  affiliate,
 }: {
-    affiliate: string;
+  affiliate: string;
 }) => {
-    if (!affiliate) return { status: 404 };
-    try {
-        const res = await db.affiliate.findUnique({
-            where: { id: affiliate },
-            select: {
-                Group: {
-                    select: {
-                        User: {
-                            select: {
-                                firstName: true,
-                                lastName: true,
-                                image: true,
-                                id: true,
-                                stripeId: true,
-                            },
-                        },
-                    },
-                },
+  if (!affiliate) return { status: 404 };
+  try {
+    const res = await db.affiliate.findUnique({
+      where: { id: affiliate },
+      select: {
+        Group: {
+          select: {
+            User: {
+              select: {
+                firstName: true,
+                lastName: true,
+                image: true,
+                id: true,
+                stripeId: true,
+              },
             },
-        });
-        if (res) return { status: 200, data: res };
-        return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
-    }
+          },
+        },
+      },
+    });
+    if (res) return { status: 200, data: res };
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
 };
 
 export const onCreateGroup = async ({
-    data: { category, name },
-    userID,
+  data: { category, name },
+  userID,
 }: {
-    userID: string;
-    data: z.infer<typeof GroupSchema>;
+  userID: string;
+  data: z.infer<typeof GroupSchema>;
 }) => {
-    try {
-        if (!userID) return { status: 404 };
-        const res = await db.user.update({
-            where: { id: userID },
-            data: {
-                group: {
-                    create: {
-                        category,
-                        name,
-                        affiliate: {
-                            create: {},
-                        },
-                        member: {
-                            create: {
-                                userId: userID,
-                            },
-                        },
-                        channel: {
-                            create: [
-                                {
-                                    id: v4(),
-                                    name: "General",
-                                    icon: "general",
-                                },
-                                {
-                                    id: v4(),
-                                    name: "Announcements",
-                                    icon: "announcement",
-                                },
-                            ],
-                        },
-                    },
-                },
+  try {
+    if (!userID) return { status: 404 };
+    const res = await db.user.update({
+      where: { id: userID },
+      data: {
+        group: {
+          create: {
+            category,
+            name,
+            icon: "general",
+            affiliate: {
+              create: {},
             },
-            select: {
+            member: {
+              create: {
+                userId: userID,
+              },
+            },
+            channel: {
+              create: [
+                {
+                  id: v4(),
+                  name: "General",
+                  icon: "general",
+                },
+                {
+                  id: v4(),
+                  name: "Announcements",
+                  icon: "announcement",
+                },
+              ],
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        group: {
+          select: {
+            id: true,
+            channel: {
+              select: {
                 id: true,
-                group: {
-                    select: {
-                        id: true,
-                        channel: {
-                            select: {
-                                id: true,
-                            },
-                            take: 1,
-                            orderBy: {
-                                createdAt: "asc",
-                            },
-                        },
-                    },
-                },
+              },
+              take: 1,
+              orderBy: {
+                createdAt: "asc",
+              },
             },
-        });
+          },
+        },
+      },
+    });
 
-        if (res) {
-            return {
-                status: 201,
-                data: res,
-                message: "Group created successfully",
-            };
-        }
-        return { status: 400, data: null, message: "Failed to create group" };
-    } catch (error) {
-        console.log(error);
-        return { status: 500, data: null, message: "Internal Server Error" };
+    if (res) {
+      return {
+        status: 201,
+        data: res,
+        message: "Group created successfully",
+      };
     }
+    return { status: 400, data: null, message: "Failed to create group" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, data: null, message: "Internal Server Error" };
+  }
 };
 
 export const getGroupInfo = async ({ groupId }: { groupId: string }) => {
-    const user = await authUser();
-    if (!groupId || !user.id) return { status: 404 };
-    try {
-        const res = await db.group.findUnique({
-            where: { id: groupId },
-        });
-        if (res)
-            return {
-                status: 200,
-                data: res,
-                groupOwner: res.userId === res.id,
-            };
-        return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
-    }
+  const user = await authUser();
+  if (!groupId || !user.id) return { status: 404 };
+  try {
+    const res = await db.group.findUnique({
+      where: { id: groupId },
+    });
+    if (res)
+      return {
+        status: 200,
+        data: res,
+        groupOwner: res.userId === res.id,
+      };
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
 };
 
 export const getUserGroups = async ({ userID }: { userID: string }) => {
-    if (!userID) return { status: 404 };
-    try {
-        const res = await db.user.findUnique({
-            where: { id: userID },
-            select: {
-                group: {
-                    select: {
-                        id: true,
-                        name: true,
-                        icon: true,
-                        channel: {
-                            where: {
-                                name: "General",
-                            },
-                            select: {
-                                id: true,
-                            },
-                        },
-                    },
-                },
-                membership: {
-                    select: {
-                        Group: {
-                            select: {
-                                id: true,
-                                name: true,
-                                icon: true,
-                                channel: {
-                                    where: {
-                                        name: "General",
-                                    },
-                                    select: {
-                                        id: true,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+  if (!userID) return { status: 404 };
+  try {
+    const res = await db.user.findUnique({
+      where: { id: userID },
+      select: {
+        group: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+            channel: {
+              where: {
+                name: "General",
+              },
+              select: {
+                id: true,
+              },
             },
-        });
-
-        if ((res && res.group.length) || res?.membership.length) {
-            return {
-                status: 200,
-                data: {
-                    groups: res.group,
-                    members: res.membership,
+          },
+        },
+        membership: {
+          select: {
+            Group: {
+              select: {
+                id: true,
+                name: true,
+                icon: true,
+                channel: {
+                  where: {
+                    name: "General",
+                  },
+                  select: {
+                    id: true,
+                  },
                 },
-            };
-        }
-        return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if ((res && res.group.length) || res?.membership.length) {
+      return {
+        status: 200,
+        data: {
+          groups: res.group,
+          members: res.membership,
+        },
+      };
     }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
 };
 
 export const getGroupsChannels = async ({ groupId }: { groupId: string }) => {
-    if (!groupId) return { status: 404 };
+  try {
+    const res = await db.channel.findMany({
+      where: {
+        groupId,
+      },
 
-    try {
-        const res = await db.channel.findMany({
-            where: {
-                groupId,
-            },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
 
-            orderBy: {
-                createdAt: "asc",
-            },
-        });
-
-        if (res) {
-            return {
-                status: 200,
-                data: res,
-            };
-        }
-        return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
+    if (res) {
+      return {
+        status: 200,
+        data: res,
+      };
     }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
 };
 
 export const getGroupSubscription = async ({
-    groupId,
+  groupId,
 }: {
-    groupId: string;
+  groupId: string;
 }) => {
-    if (!groupId) return { status: 404 };
-    try {
-        const res = await db.subscription.findMany({
-            where: {
-                groupId,
-            },
-            orderBy: {
-                createdAt: "asc",
-            },
-        });
+  if (!groupId) return { status: 404 };
+  try {
+    const res = await db.subscription.findMany({
+      where: {
+        groupId,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
 
-        const count = await db.members.count({
-            where: { groupId },
-        });
+    const count = await db.members.count({
+      where: { groupId },
+    });
 
-        if (res) {
-            return { status: 200, data: res, count };
-        }
-        return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
+    if (res) {
+      return { status: 200, data: res, count };
     }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
 };
 
 export const getMemberChat = async ({ groupId }: { groupId: string }) => {
-    if (!groupId) return { status: 404 };
-    try {
-        const user = await authUser();
-        const res = await db.members.findMany({
-            where: {
-                groupId,
-                NOT: {
-                    userId: user.id,
-                },
+  if (!groupId) return { status: 404 };
+  try {
+    const user = await authUser();
+    const res = await db.members.findMany({
+      where: {
+        groupId,
+        NOT: {
+          userId: user.id,
+        },
+      },
+      include: {
+        User: true,
+      },
+    });
+
+    if (res && res.length) {
+      return { status: 200, data: res };
+    }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const searchGroups = async ({
+  query,
+  searchType,
+  paginate,
+}: {
+  query: string;
+  searchType: "POSTS" | "GROUPS";
+  paginate?: number;
+}) => {
+  try {
+    switch (searchType) {
+      case "POSTS": {
+        // FOR FUTURE UPDATES
+        return { status: 200, data: [] };
+      }
+      case "GROUPS": {
+        const res = await db.group.findMany({
+          where: {
+            name: {
+              contains: query,
+              mode: "insensitive",
             },
-            include: {
-                User: true,
-            },
+          },
+          take: 6,
+          skip: paginate || 0,
         });
 
-        if (res && res.length) {
-            return { status: 200, data: res };
+        if (res) {
+          if (res.length) {
+            return {
+              status: 200,
+              data: res,
+            };
+          }
         }
         return { status: 400 };
-    } catch (error) {
-        console.log(error);
-        return { status: 500 };
+      }
     }
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const updateGroupInfo = async ({
+  content,
+  groupId,
+  path,
+  type,
+}: {
+  groupId: string;
+  type:UPDATE_ATTRIBUTES_TYPE
+  content: string;
+  path: string;
+}) => {
+  if (!groupId) return { status: 404, message: "Group ID Missing" };
+
+  try {
+    switch (type) {
+      case "IMAGE": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            thumbnail: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+      case "ICON": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            icon: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+      case "NAME": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            name: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+      case "DESCRIPTION": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            description: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+      case "JSONDESCRIPTION": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            jsonDescription: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+      case "HTMLDESCRIPTION": {
+        const res = await db.group.update({
+          where: {
+            id: groupId,
+          },
+          data: {
+            htmlDescription: content,
+          },
+        });
+        if (res) {
+          revalidatePath(path);
+          return { status: 204, message: "Groups Changes Reflected" };
+        }
+        revalidatePath(path);
+        return { status: 400, message: "Something went wrong!" };
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
 };

@@ -1,10 +1,14 @@
 import {
+    AffiliateDuoToneBlack,
     Chat,
     Courses,
+    CreditCard,
     Document,
     Fitness,
+    GlobeDuoToneBlack,
     Grid,
     Heart,
+    IDuotoneBlack,
     LifeStyle,
     MegaPhone,
     Music,
@@ -12,6 +16,7 @@ import {
     SocialMedia,
     Tech,
     WhiteLabel,
+    ZapDouToneBlack,
 } from "@/icons";
 import { Business } from "@/icons/buisness";
 import { RefreshCcw } from "lucide-react";
@@ -117,5 +122,55 @@ export const GROUP_LIST: GROUP_LIST_PROPS[] = [
         icon: Tech,
         path: "Tech",
         id: "8",
+    },
+];
+
+export type SIDEBAR_SETTINGS_MENU_PROPS = {
+    id: number;
+    label: string;
+    icon: React.ComponentType;
+    path: string;
+};
+
+export type MENU_PROPS = {
+    id: number;
+    label: string;
+    icon: React.ComponentType;
+    path: string;
+    section?: boolean;
+    integration?: boolean;
+};
+
+export const SIDEBAR_SETTINGS_MENU: MENU_PROPS[] = [
+    {
+        id: 0,
+        label: "General",
+        icon: IDuotoneBlack,
+        path: "",
+    },
+    {
+        id: 1,
+        label: "Subscription",
+        icon: CreditCard,
+        path: "subscription",
+    },
+    {
+        id: 2,
+        label: "Affiliates",
+        icon: AffiliateDuoToneBlack,
+        path: "affiliates",
+    },
+    {
+        id: 3,
+        label: "Domain Config",
+        icon: GlobeDuoToneBlack,
+        path: "domains",
+    },
+    {
+        id: 4,
+        label: "Integration",
+        icon: ZapDouToneBlack,
+        path: "integrations",
+        integration: true,
     },
 ];

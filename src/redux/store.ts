@@ -2,9 +2,12 @@
 "use client";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { OnlineTracking } from "./slices/online-member";
+import { Search } from "./slices/search";
 
 const rootReducer = combineReducers({
-    //add all your reducers here
+    online: OnlineTracking.reducer,
+    search: Search.reducer,
 });
 
 export const store = configureStore({

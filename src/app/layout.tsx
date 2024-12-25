@@ -28,9 +28,9 @@ export default function RootLayout({
                         defaultTheme="dark"
                         disableTransitionOnChange
                     >
-                        {/* <ReduxProvider> */}
+                        <ReduxProvider>
                         <ReactQueryProvider>{children}</ReactQueryProvider>
-                        {/* </ReduxProvider> */}
+                        </ReduxProvider>
                         <Toaster />
                     </ThemeProvider>
                 </body>

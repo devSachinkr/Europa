@@ -1,12 +1,12 @@
 import { toast } from "sonner";
 type Props = {
     title: "Oops!" | "Success";
-    msg: string;
+    msg?: string;
 };
 
 const ToastNotify = ({ msg, title }: Props) => {
     toast(title, {
-        description: msg,
+        description: msg||"",
         action: {
             label: "X",
             onClick: () => toast.dismiss(),
