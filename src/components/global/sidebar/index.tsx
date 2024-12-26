@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
 import { useGroupChat } from "@/hooks/chat";
@@ -5,13 +6,12 @@ import { useSidebar } from "@/hooks/sidebar";
 import { CarotSort } from "@/icons";
 import { cn } from "@/lib/utils";
 import { Group, PlusCircle } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { v4 } from "uuid";
+import groupPlaceholderIcon from "../../../../public/assets/group_icon.svg";
 import Dropdown from "../drop-down";
 import SidebarMenu from "./menu";
-import { usePathname } from "next/navigation";
-
 type Props = {
   groupId: string;
   userId: string;
@@ -77,10 +77,14 @@ const Sidebar = ({ groupId, userId, mobile }: Props) => {
         <Dropdown
           title="Gropus"
           trigger={
-            <div className="w-full flex items-center justify-between text-themeTextGray md:border-[1px] border-themeGray py-3 rounded-xl">
+            <div className="w-full flex items-center justify-between text-themeTextGray md:border-[1px] border-themeGray py-3 rounded-xl p-2">
               <div className="flex gap-x-3 items-center">
-                <Image
-                  src={`https://ucarecdn.com/${groupInfo.data?.icon || "general"}`}
+                <img
+                  src={
+                    groupInfo.data?.icon
+                      ? `https://ucarecdn.com/${groupInfo.data?.icon}/`
+                      : groupPlaceholderIcon.src
+                  }
                   alt="icon"
                   className="w-10 rounded-lg"
                   width={40}

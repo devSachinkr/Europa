@@ -1,9 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import groupPlaceholderSvg from "../../../../../public/assets/group_placeholder.svg";
 import { truncateString } from "@/lib/utils";
+import Link from "next/link";
+import groupPlaceholderSvg from "../../../../../public/assets/group_placeholder.svg";
 type Props = {
   id: string;
   createdAt: Date;
@@ -16,17 +15,18 @@ type Props = {
   preview?: string;
 };
 
-const GroupCard = ({
-  id,
-  description,
-  name,
-  preview,
-}: Props) => {
+const GroupCard = ({ id, description, name, preview, thumbnail }: Props) => {
+  console.log(thumbnail, "🌍🌍🌍🌍🌍🌍🌍🌍🌍🌍");
   return (
     <Link href={`/about/${id}`}>
       <Card className="bg-themeBlack border-themeGray rounded-xl overflow-hidden">
-        <Image
-          src={preview || groupPlaceholderSvg}
+        <img
+          src={
+            preview ||
+            (thumbnail?.length&&
+              `https://ucarecdn.com/${thumbnail as string}/`) ||
+            groupPlaceholderSvg.src
+          }
           alt="thumbnail"
           className="w-full"
           width={200}

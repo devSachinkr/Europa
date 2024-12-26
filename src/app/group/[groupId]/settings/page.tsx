@@ -1,5 +1,4 @@
 import GroupSettingsForm from "@/components/forms/group/settings";
-import GradientText from "@/components/global/gradient-text";
 import React from "react";
 
 type Props = {

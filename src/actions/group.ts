@@ -327,7 +327,7 @@ export const updateGroupInfo = async ({
   type,
 }: {
   groupId: string;
-  type:UPDATE_ATTRIBUTES_TYPE
+  type: UPDATE_ATTRIBUTES_TYPE;
   content: string;
   path: string;
 }) => {
@@ -435,5 +435,39 @@ export const updateGroupInfo = async ({
   } catch (error) {
     console.log(error);
     return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+export const getExploreGroups = async ({
+  type,
+  page,
+}: {
+  type: string;
+  page: number;
+}) => {
+  if (!type.length)
+    return { status: 404, message: "Category not found", data: [] };
+  try {
+    const res = await db.group.findMany({
+      where: {
+        category: type,
+        NOT: {
+          description: null,
+          thumbnail: null,
+        },
+      },
+      take: 6,
+      skip: page,
+    });
+    if (res && res.length) {
+      return {
+        status: 200,
+        data: res,
+      };
+    }
+    return { status: 404, message: "Category not found", data: [] };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error", data: [] };
   }
 };

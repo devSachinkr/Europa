@@ -9,9 +9,12 @@ type Props = {
 };
 
 const layout = async ({ children }: Props) => {
+    
+     
     const user = await authUser();
     if (user.status === 200) {
-        redirect("/callback/sign-in");
+           redirect("/callback/sign-in");
+
     }
 
     return (

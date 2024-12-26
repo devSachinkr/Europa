@@ -1,11 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import GroupCard from "@/app/(discover)/explore/_components/group-card";
+import { FormGenerator } from "@/components/global/form-generator";
+import { Loader } from "@/components/global/loader";
+import BlockTextEditor from "@/components/global/rich-text-editor";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGroupSettings } from "@/hooks/group";
-import Image from "next/image";
-import React from "react";
 import groupPlaceholderIcon from "../../../../public/assets/group_icon.svg";
 type Props = {
   groupId: string;
@@ -22,7 +25,6 @@ const GroupSettingsForm = ({ groupId }: Props) => {
     setDescription,
     setJsonDescription,
     group,
-    update,
     jsonDescription,
     description,
   } = useGroupSettings({ groupId });
@@ -60,19 +62,61 @@ const GroupSettingsForm = ({ groupId }: Props) => {
         </div>
         <div className="flex-1 flex flex-col gap-3 items-start">
           <p>Icon Preview</p>
+          <img
+            className="w-20 h-20 rounded-xl"
+            src={
+              previewIcon ||
+              (group?.data?.icon &&
+                `https://ucarecdn.com/${group.data.icon as string}/`) ||
+              groupPlaceholderIcon.src
+            }
+            alt="icon"
+            width={20}
+            height={20}
+          />
+          <Label
+            htmlFor="icon-upload"
+            className="border-2 border-themeGray bg-themeGray/50 px-5 py-3 rounded-lg hover:bg-themeBlack cursor-pointer"
+          >
+            <Input
+              type="file"
+              id="icon-upload"
+              className="hidden"
+              {...register("icon")}
+            />
+            Change Icon
+          </Label>
         </div>
-        <Image
-          className="w-20 h-20 rounded-xl"
-          src={
-            previewIcon ||
-            (group?.data?.icon &&
-              `https://ucarecdn.com/${group.data.icon as string}`) ||
-            groupPlaceholderIcon
-          }
-          alt="icon"
-          width={20}
-          height={20}
+      </div>
+      <div className=" mb-6 flex flex-col ww-full xl:w-8/12 2xl:w-7/12 gap-y-5">
+        <FormGenerator
+          register={register}
+          name="name"
+          label="Group Name"
+          placeholder={group?.data?.name || "Group Name"}
+          errors={errors}
+          inputType="input"
+          type="text"
         />
+        <Label className="flex flex-col gap-y-2 mb-6">
+          <p>Group Description</p>
+          <BlockTextEditor
+            name="jsondescription"
+            errors={errors}
+            min={150}
+            max={10000}
+            textContent={description}
+            content={jsonDescription!}
+            setContent={setJsonDescription!}
+            setTextContent={setDescription}
+          />
+        </Label>
+        <Button
+          type="submit"
+          className="bg-demonGreen hover:bg-demonGreen/80 text-white font-bold py-2 px-4 rounded-md mb-6"
+        >
+          <Loader loading={isPending}>Save Changes</Loader>
+        </Button>
       </div>
     </form>
   );

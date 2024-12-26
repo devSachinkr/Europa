@@ -19,6 +19,9 @@ export type UPDATE_ATTRIBUTES_TYPE =
   | "DESCRIPTION"
   | "JSONDESCRIPTION"
   | "HTMLDESCRIPTION";
+
+
+
 export const useGroupSettings = ({ groupId }: { groupId: string }) => {
   const { data: group } = useQuery({
     queryKey: ["group-info"],
@@ -26,9 +29,7 @@ export const useGroupSettings = ({ groupId }: { groupId: string }) => {
   });
 
   const jsonContent =
-    group?.data?.jsonDescription !== null ||
-    group?.data?.jsonDescription !== "" ||
-    group?.data?.jsonDescription !== undefined
+    group?.data?.jsonDescription
       ? JSON.parse(group?.data?.jsonDescription as string)
       : undefined;
   const [jsonDescription, setJsonDescription] = useState<
@@ -46,7 +47,7 @@ export const useGroupSettings = ({ groupId }: { groupId: string }) => {
     watch,
     setValue,
   } = useForm<z.infer<typeof GroupSettingsSchema>>({
-    mode: "onChange",
+    mode: "onBlur",
     resolver: zodResolver(GroupSettingsSchema),
   });
   const [previewIcon, setPreviewIcon] = useState<string | undefined>(undefined);

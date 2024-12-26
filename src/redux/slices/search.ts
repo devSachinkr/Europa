@@ -1,5 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export type GroupStateProps = {
+  id: string;
+  createdAt: Date;
+  userId: string;
+  category: string;
+  description?: string | null;
+  privacy: "PUBLIC" | "PRIVATE";
+  thumbnail?: string | null;
+  name: string;
+  htmlDescription?: string | null;
+  jsonDescription?: string | null;
+  gallery?: string [];
+  
+}
+
 type InitialStatePops = {
   isSearching?: boolean;
   status?: number;

@@ -5,7 +5,7 @@ import User from "./user";
 
 type Props = {
   image: string;
-  groupId: string;
+  groupId?: string;
   userId: string;
 };
 
@@ -15,7 +15,7 @@ const UserWidget = ({ groupId, image, userId }: Props) => {
       <Link href={`/group/${groupId}/messages`}>
         <Message />
       </Link>
-      <User userId={userId} image={image} groupId={groupId} />
+      <User userId={userId} image={image} groupId={groupId!} />
     </div>
   );
 };

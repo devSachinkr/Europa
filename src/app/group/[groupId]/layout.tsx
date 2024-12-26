@@ -13,16 +13,13 @@ import { redirect } from "next/navigation";
 import React from "react";
 import Navbar from "./_components/navbar";
 
-type Props = Promise<{
+type Props = {
   children: React.ReactNode;
-  params: { groupId: string };
-}>;
+  params: Promise<{ groupId: string }>;
+};
 
-const layout = async (props: Props) => {
-  const {
-    children,
-    params: { groupId },
-  } = await props;
+const layout = async ({ children, params }: Props) => {
+  const { groupId } = await params;
   const user = await authUser();
   if (!user.id) return redirect("/sign-in");
 
