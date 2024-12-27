@@ -33,41 +33,48 @@ const useSearch = ({ searchType }: { searchType: "GROUPS" | "POSTS" }) => {
     enabled: false,
   });
 
-  if (isFetching) {
-    dispatch(
-      onSearch({
-        isSearching: true,
-        data: [],
-      }),
-    );
-  }
+  useEffect(() => {
+    if (isFetching) {
+      dispatch(
+        onSearch({
+          isSearching: true,
+          data: [],
+        }),
+      );
+    }
+  }, [isFetching, dispatch]); 
 
-  if (isFetched) {
-    dispatch(
-      onSearch({
-        isSearching: false,
-        status: data?.status as number,
-        data: data?.data || [],
-        debounce,
-      }),
-    );
-  }
+  useEffect(() => {
+    if (isFetched) {
+      dispatch(
+        onSearch({
+          isSearching: false,
+          status: data?.status as number,
+          data: data?.data || [],
+          debounce,
+        }),
+      );
+    }
+  }, [isFetched, data, debounce, dispatch]);
   useEffect(() => {
     const delayInputTimeout = setTimeout(() => {
       setDebounce(query);
     }, 500);
+
     return () => clearTimeout(delayInputTimeout);
-  }, [query, 500]);
+  }, [query]);
 
   useEffect(() => {
     if (debounce) refetch();
     if (!debounce) dispatch(onReset());
+
     return () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       debounce;
     };
-  }, [debounce]);
-  return { query,handleSearch};
+  }, [debounce, refetch, dispatch]);
+
+  return { query, handleSearch };
 };
 
 export { useSearch };

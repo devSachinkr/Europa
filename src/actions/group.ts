@@ -310,6 +310,7 @@ export const searchGroups = async ({
               data: res,
             };
           }
+          return { status: 404, message: "Category not found", data: [] };
         }
         return { status: 400 };
       }
@@ -458,6 +459,64 @@ export const getExploreGroups = async ({
       },
       take: 6,
       skip: page,
+    });
+    if (res && res.length) {
+      return {
+        status: 200,
+        data: res,
+      };
+    }
+    return { status: 404, message: "Category not found", data: [] };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error", data: [] };
+  }
+};
+
+export const getPaginatedPosts = async ({
+  indentifier,
+  paginate,
+}: {
+  indentifier: string;
+  paginate: number;
+}) => {
+  try {
+    const user = await authUser();
+    if (!user.id) return { status: 404, message: "User not found", data: [] };
+    const res = await db.post.findMany({
+      where: {
+        channelId: indentifier,
+      },
+      take: 2,
+      skip: paginate,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        channel: {
+          select: {
+            name: true,
+          },
+        },
+        author: {
+          select: { image: true, firstName: true, lastName: true },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        }
+      },
     });
     if (res && res.length) {
       return {
