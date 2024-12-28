@@ -117,8 +117,7 @@ export const onCreateGroup = async ({
 };
 
 export const getGroupInfo = async ({ groupId }: { groupId: string }) => {
-  const user = await authUser();
-  if (!groupId || !user.id) return { status: 404 };
+  if (!groupId ) return { status: 404 };
   try {
     const res = await db.group.findUnique({
       where: { id: groupId },
@@ -515,7 +514,7 @@ export const getPaginatedPosts = async ({
             userId: true,
             id: true,
           },
-        }
+        },
       },
     });
     if (res && res.length) {
@@ -530,3 +529,66 @@ export const getPaginatedPosts = async ({
     return { status: 500, message: "Internal Server Error", data: [] };
   }
 };
+
+export const updateGallery = async ({
+  groupId,
+  content,
+}: {
+  groupId: string;
+  content: string;
+}) => {
+  if (!groupId) return { status: 404, message: "Group ID Missing" };
+  try {
+    const mediaLimit = await db.group.findUnique({
+      where: {
+        id: groupId,
+      },
+      select: {
+        gallery: true,
+      },
+    });
+    if (mediaLimit && mediaLimit.gallery.length < 6) {
+      await db.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          gallery: [...mediaLimit.gallery, content],
+        },
+      });
+      return { status: 200, message: "Gallery Updated" };
+    }
+    revalidatePath(`/groups/${groupId}`);
+    return { status: 400, message: "Gallery Limit Reached" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+export const joinGroup = async ({ groupId }: { groupId: string }) => {
+  try {
+    const user = await authUser();
+    if (!groupId || !user.id) return { status: 404 };
+
+    const res = await db.group.update({
+      where: {
+        id: groupId,
+      },
+      data: {
+        member: {
+          create: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+    if (res) {
+      return { status: 200, message: "Group Joined Successfully" };
+    }
+    return { status: 400, message: "Group Joined Failed" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};  

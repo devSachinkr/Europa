@@ -252,8 +252,11 @@ export const useGroupAboutInfo = ({
         }
       : { ...mediaType },
   );
+  console.log(jsonDescription);
   const jsonContent =
-    jsonDescription !== null ? JSON.parse(jsonDescription) : undefined;
+    jsonDescription !== null
+      ? JSON.parse(jsonDescription as string)
+      : undefined;
 
   const [onJsonDescription, setOnJsonDescription] = useState<
     JSONContent | undefined

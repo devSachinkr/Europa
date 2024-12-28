@@ -9,7 +9,7 @@ export const truncateString = ({ str }: { str: string }) => {
   return str.slice(0, 60).concat("...");
 };
 
-export const validateURLString = (url: string) => {
+export const  validateURLString = (url: string) => {
   const youtubeRegex = new RegExp("www.youtube.com");
   const loomRegex = new RegExp("www.loom.com");
 

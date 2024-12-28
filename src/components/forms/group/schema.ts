@@ -45,11 +45,11 @@ export const GroupSettingsSchema = z
           ACCEPTED_FILES_TYPES.includes(schema.icon?.[0].type) &&
           schema.icon?.[0].size <= MAX_UPLOAD_SIZE
         ) {
-          return true
+          return true;
         }
       }
       if (!schema.icon?.length) {
-        return true
+        return true;
       }
     },
     {
@@ -65,11 +65,11 @@ export const GroupSettingsSchema = z
           ACCEPTED_FILES_TYPES.includes(schema.thumbnail?.[0].type) &&
           schema.thumbnail?.[0].size <= MAX_UPLOAD_SIZE
         ) {
-          return true
+          return true;
         }
       }
       if (!schema.thumbnail?.length) {
-        return true
+        return true;
       }
     },
     {
@@ -77,4 +77,8 @@ export const GroupSettingsSchema = z
         "The image must be less then 2MB, and on PNG, JPEG & JPG files are accepted",
       path: ["thumbnail"],
     },
-  )
+  );
+
+export const GroupSubscriptionSchema = z.object({
+  price: z.string().min(1, { message: "Price must be at least 1 Rupees" }),
+});

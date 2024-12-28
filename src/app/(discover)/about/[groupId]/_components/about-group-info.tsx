@@ -1,7 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
+import HtmlParser from "@/components/global/html-parser";
+import { Loader } from "@/components/global/loader";
+import BlockTextEditor from "@/components/global/rich-text-editor";
+import { Button } from "@/components/ui/button";
 import { useGroupAboutInfo, useGroupInfo } from "@/hooks/group";
-import Image from "next/image";
-import React from "react";
+import { JSONContent } from "novel";
 import MediaGallery from "./media-gallery";
 
 type Props = {
@@ -11,10 +15,10 @@ type Props = {
 
 const AboutGroupInfo = ({ userId, groupId }: Props) => {
   const { group } = useGroupInfo();
+  console.log(group);
   const {
     onDescription,
     onJsonDescription,
-    onHtmlDescription,
     activeMedia,
     onSetActiveMedia,
     setOnDescription,
@@ -24,6 +28,7 @@ const AboutGroupInfo = ({ userId, groupId }: Props) => {
     onEditDescription,
     isPending,
     onSubmit,
+    errors,
   } = useGroupAboutInfo({
     groupId,
     description: group?.description as string,
@@ -46,56 +51,80 @@ const AboutGroupInfo = ({ userId, groupId }: Props) => {
   return (
     <div className="flex flex-col gap-y-10">
       <div>
-        <h2 className="text-[56px] font-bold leading-none md:leading-normal">
+        <h2 className="font-bold text-[56px] leading-none md:leading-normal">
           {group.name}
         </h2>
-        <p className="text-themeTextGray leading-none md:mt-2 mt-5">
-          {group.description}
-        </p>
       </div>
 
-      {group.gallery?.length ||
-        (0 > 0 && (
-          <div className="relative rounded-xl">
-            <div className="img--overlay absolute h-2/6 bottom-0 w-full z-50" />
-            {activeMedia?.type === "IMAGE" ? (
-              <Image
-                src={`https://ucarecdn.com/${activeMedia.url}/`}
-                alt="Group Image"
-                className="w-full aspect-video z-20  rounded-t-xl"
-                width={350}
-                height={350}
-              />
-            ) : activeMedia?.type === "LOOM" ? (
-              <div className="w-full aspect-video">
+      {group && group.gallery && group.gallery?.length > 0 && (
+        <div className="relative rounded-xl">
+          <div className="img--overlay absolute h-2/6 bottom-0 w-full z-50" />
+          {activeMedia?.type === "IMAGE" ? (
+            <img
+              src={`https://ucarecdn.com/${activeMedia.url}/`}
+              alt="Group Image"
+              className="w-full aspect-video z-20  rounded-t-xl"
+            />
+          ) : activeMedia?.type === "LOOM" ? (
+            <div className="w-full aspect-video">
+              <iframe
+                src={activeMedia.url}
+                allowFullScreen
+                className="absolute outline-none border-0 top-0 left-0 w-full h-full rounded-t-xl"
+              ></iframe>
+            </div>
+          ) : (
+            activeMedia?.type === "YOUTUBE" && (
+              <div className="w-full aspect-video relative">
                 <iframe
+                  className="w-full absolute top-0 left-0 h-full rounded-xl"
                   src={activeMedia.url}
-                  className="w-full absolute outline-none border-0 top-0 left-0 h-full rounded-t-xl "
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 ></iframe>
               </div>
-            ) : (
-              activeMedia?.type === "YOUTUBE" && (
-                <div className="w-full aspect-video">
-                  <iframe
-                    src={activeMedia.url}
-                    className="w-full absolute outline-none border-0 top-0 left-0 h-full rounded-t-xl "
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              )
-            )}
-          </div>
-        ))}
+            )
+          )}
+        </div>
+      )}
       <MediaGallery
         groupId={groupId}
         onActiveMedia={onSetActiveMedia}
         userId={userId}
         groupUserId={group.userId}
         gallery={group.gallery}
-      ></MediaGallery>
+      />
+      {userId !== group.userId ? (
+        <HtmlParser html={group.htmlDescription || "<></>"} />
+      ) : (
+        <form ref={editor} className="flex flex-col mt-5" onSubmit={onSubmit}>
+          <BlockTextEditor
+            onEdit={onEditDescription}
+            max={10000}
+            inline
+            min={100}
+            disabled={userId !== group.userId}
+            name="jsondescription"
+            errors={errors}
+            setContent={setOnJsonDescription}
+            content={onJsonDescription as JSONContent}
+            htmlContent={group.htmlDescription as string | undefined}
+            setHtmlContent={setOnHtmlDescription}
+            textContent={onDescription}
+            setTextContent={setOnDescription}
+          />
+          {onEditDescription && (
+            <Button
+              type="submit"
+              className="mt-5 self-end bg-demonGreen text-white hover:bg-demonGreen/80 disabled:bg-demonGreen/40 disabled:hover:bg-demonGreen/40
+                px-10  rounded-xl"
+              disabled={isPending}
+            >
+              <Loader loading={isPending}>Update</Loader>
+            </Button>
+          )}
+        </form>
+      )}
     </div>
   );
 };
