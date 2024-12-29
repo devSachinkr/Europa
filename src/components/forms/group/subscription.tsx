@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useGroupSubscriptionForm } from "@/hooks/payment";
 import { Tag } from "lucide-react";
-import React from "react";
 
 type Props = {
   groupId: string;

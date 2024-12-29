@@ -1,6 +1,5 @@
 import GroupSubscriptionForm from "@/components/forms/group/subscription";
 import GradientText from "@/components/global/gradient-text";
-import React from "react";
 import Subscriptions from "./_components/subscriptions";
 
 type Props = {

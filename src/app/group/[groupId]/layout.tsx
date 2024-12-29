@@ -12,6 +12,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import React from "react";
 import Navbar from "./_components/navbar";
+import MobileNav from "./_components/mobile-nav";
 
 type Props = {
   children: React.ReactNode;
@@ -62,7 +63,7 @@ const layout = async ({ children, params }: Props) => {
         <div className="md:ml-[300px] flex flex-col flex-1 bg-[#101010] md:rounded-tl-xl overflow-y-auto border-l-[1px] border-t-[1px]  border-[#28282D]">
           <Navbar groupId={groupId} userId={user.id} />
           {children}
-          {/* <MobileNav groupId={groupId} /> */}
+          <MobileNav groupId={groupId} />
         </div>
       </div>
     </HydrationBoundary>

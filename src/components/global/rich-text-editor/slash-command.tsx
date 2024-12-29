@@ -144,7 +144,7 @@ export const suggestionItems = createSuggestionItems([
         if (input.files?.length) {
           const file = input.files[0];
           const uploaded = await upload.uploadFile(file);
-          const url = `https://ucarecdn.com/${uploaded.uuid}`;
+          const url = `https://ucarecdn.com/${uploaded.uuid}/`;
           if (url) {
             editor.commands.insertContent([
               {

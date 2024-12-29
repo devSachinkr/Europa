@@ -1,7 +1,7 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import React from "react";
-
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 type Props = {
     children: React.ReactNode;
     trigger: React.ReactNode;
@@ -26,6 +26,10 @@ const GlassSheet = ({
                     className,
                 )}
             >
+                <VisuallyHidden asChild>
+                    <SheetTitle></SheetTitle>
+                </VisuallyHidden>
+
                 {children}
             </SheetContent>
         </Sheet>

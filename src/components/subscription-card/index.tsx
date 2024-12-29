@@ -1,7 +1,6 @@
-import React from "react";
-import { Card } from "../ui/card";
 import { cn } from "@/lib/utils";
 import { User } from "lucide-react";
+import { Card } from "../ui/card";
 
 type Props = {
   price: string;

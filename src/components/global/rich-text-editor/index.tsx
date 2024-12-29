@@ -71,7 +71,7 @@ const BlockTextEditor = ({
             className={cn(
               inline
                 ? onEdit && "mb-5"
-                : "border-[1px] border-themeGray bg-themeGray/50 rounded-xl w-full text-base py-5 px-10 ",
+                : "border-[1px] border-themeGray bg-themeGray/50 rounded-xl w-full text-base py-5 px-10  overflow-y-scroll",
             )}
             initialContent={content}
             editorProps={{

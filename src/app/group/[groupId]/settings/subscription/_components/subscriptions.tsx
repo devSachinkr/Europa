@@ -1,7 +1,6 @@
 'use client'
 import SubscriptionCard from "@/components/subscription-card";
 import { useAllSubscriptions } from "@/hooks/payment";
-import React from "react";
 
 type Props = {
   groupId: string;
