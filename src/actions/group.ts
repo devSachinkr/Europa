@@ -117,7 +117,8 @@ export const onCreateGroup = async ({
 };
 
 export const getGroupInfo = async ({ groupId }: { groupId: string }) => {
-  if (!groupId ) return { status: 404 };
+  if (!groupId) return { status: 404 };
+  const user = await authUser();
   try {
     const res = await db.group.findUnique({
       where: { id: groupId },
@@ -126,7 +127,7 @@ export const getGroupInfo = async ({ groupId }: { groupId: string }) => {
       return {
         status: 200,
         data: res,
-        groupOwner: res.userId === res.id,
+        groupOwner: res.userId === user.id,
       };
     return { status: 400 };
   } catch (error) {
@@ -591,4 +592,38 @@ export const joinGroup = async ({ groupId }: { groupId: string }) => {
     console.log(error);
     return { status: 500, message: "Internal Server Error" };
   }
-};  
+};
+
+export const createCourseModule = async ({
+  courseId,
+  title,
+  moduleId,
+}: {
+  courseId: string;
+  title: string;
+  moduleId: string;
+}) => {
+  if (!courseId) return { status: 404 };
+  try {
+    const res = await db.course.update({
+      where: {
+        id: courseId,
+      },
+      data: {
+        modules: {
+          create: {
+            title,
+            id: moduleId,
+          },
+        },
+      },
+    });
+    if (res) {
+      return { status: 200, message: "Module Created Successfully" };
+    }
+    return { status: 400, message: "Module Creation Failed" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};

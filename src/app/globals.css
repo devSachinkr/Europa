@@ -229,3 +229,17 @@ html {
     height: 0;
     pointer-events: none;
 }
+
+
+.hide-scrollbar {
+  overflow-y: scroll; 
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hides scrollbar */
+}
+
+.hide-scrollbar {
+  overflow-y: overlay;
+}
