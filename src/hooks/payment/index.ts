@@ -1,5 +1,9 @@
-'use client'
-import { getGroupsChannels, getGroupSubscription, joinGroup } from "@/actions/group";
+"use client";
+import {
+  getGroupsChannels,
+  getGroupSubscription,
+  joinGroup,
+} from "@/actions/group";
 import {
   activateSubscription,
   createNewGroupSubscription,
@@ -10,8 +14,7 @@ import { GroupSubscriptionSchema } from "@/components/forms/group/schema";
 import ToastNotify from "@/components/global/toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { StripeCardElement } from "@stripe/stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, StripeCardElement } from "@stripe/stripe-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -139,7 +142,6 @@ export const useGroupSubscriptionForm = ({ groupId }: { groupId: string }) => {
   };
 };
 
-
 export const useAllSubscriptions = ({ groupId }: { groupId: string }) => {
   const { data } = useQuery({
     queryKey: ["group-subscriptions"],
@@ -149,22 +151,22 @@ export const useAllSubscriptions = ({ groupId }: { groupId: string }) => {
   });
   const client = useQueryClient();
 
- const {mutate} = useMutation({
-     mutationFn:((data:{id:string})=>{
-      return activateSubscription({ id: data.id })
-     }),
-     onSuccess:(data)=>{
+  const { mutate } = useMutation({
+    mutationFn: (data: { id: string }) => {
+      return activateSubscription({ id: data.id });
+    },
+    onSuccess: (data) => {
       return ToastNotify({
         title: data?.status === 200 ? "Success" : "Oops!",
         msg: data?.message,
       });
-     },
-     onSettled: async () => {
+    },
+    onSettled: async () => {
       return await client.invalidateQueries({
         queryKey: ["group-subscriptions"],
       });
     },
- });
+  });
 
-  return { data , mutate };
+  return { data, mutate };
 };

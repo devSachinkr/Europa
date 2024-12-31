@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import { authUser } from "./auth";
 
 export const getStripeClientSecret = async () => {
   try {
@@ -149,77 +150,97 @@ export const createNewGroupSubscription = async ({
 };
 
 export const activateSubscription = async ({ id }: { id: string }) => {
-   if (!id) return { status: 404 };
+  if (!id) return { status: 404 };
   try {
-     const status = await db.subscription.findUnique({
-       where: {
-         id,
-       },
-       select: {
-         active: true,
-       },
-     });
-     if (status) {
-       if (status.active) {
-         return { status: 200, message: "Plan already active" };
-       }
-       if (!status.active) {
-         const current = await db.subscription.findFirst({
-           where: {
-             active: true,
-           },
-           select: {
-             id: true,
-           },
-         });
-         if (current && current.id) {
-           const deactivate = await db.subscription.update({
-             where: {
-               id: current.id,
-             },
-             data: {
-               active: false,
-             },
-           });
+    const status = await db.subscription.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        active: true,
+      },
+    });
+    if (status) {
+      if (status.active) {
+        return { status: 200, message: "Plan already active" };
+      }
+      if (!status.active) {
+        const current = await db.subscription.findFirst({
+          where: {
+            active: true,
+          },
+          select: {
+            id: true,
+          },
+        });
+        if (current && current.id) {
+          const deactivate = await db.subscription.update({
+            where: {
+              id: current.id,
+            },
+            data: {
+              active: false,
+            },
+          });
 
-           if (deactivate) {
-             const activateNew = await db.subscription.update({
-               where: {
-                 id,
-               },
-               data: {
-                 active: true,
-               },
-             });
+          if (deactivate) {
+            const activateNew = await db.subscription.update({
+              where: {
+                id,
+              },
+              data: {
+                active: true,
+              },
+            });
 
-             if (activateNew) {
-               return {
-                 status: 200,
-                 message: "New plan activated",
-               };
-             }
-           }
-         } else {
-           const activateNew = await db.subscription.update({
-             where: {
-               id,
-             },
-             data: {
-               active: true,
-             },
-           });
+            if (activateNew) {
+              return {
+                status: 200,
+                message: "New plan activated",
+              };
+            }
+          }
+        } else {
+          const activateNew = await db.subscription.update({
+            where: {
+              id,
+            },
+            data: {
+              active: true,
+            },
+          });
 
-           if (activateNew) {
-             return {
-               status: 200,
-               message: "New plan activated",
-             };
-           }
-         }
-       }
-     }
+          if (activateNew) {
+            return {
+              status: 200,
+              message: "New plan activated",
+            };
+          }
+        }
+      }
+    }
   } catch (error) {
     console.log(error);
     return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+export const getStripeIntegration = async () => {
+  const user = await authUser();
+  if (!user.id) return { status: 404 };
+  try {
+    const res = await db.user.findUnique({
+      where: { id: user.id },
+      select: {
+        stripeId: true,
+      },
+    });
+    if (res && res.stripeId) {
+      return { status: 200, data: res };
+    }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
   }
 };

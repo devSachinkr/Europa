@@ -27,7 +27,7 @@ const SectionNav = ({ sectionId }: Props) => {
       <div>
         <Button
           className="bg-demonGreen/60 hover:bg-demonGreen/80 text-white font-bold py-2 px-4 rounded-full gap-x-3"
-          onClick={mutate}
+          onClick={() => mutate()}
         >
           <Check size={16} />
           {isPending

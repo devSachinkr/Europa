@@ -9,7 +9,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
-
+import EuropaLogo from "../../../../public/assets/group_icon.svg";
 type SimpleModalProps = {
   trigger: JSX.Element;
   children: React.ReactNode;
@@ -32,41 +32,30 @@ export const SimpleModal = ({
       return (
         <Dialog>
           <DialogTrigger asChild>{trigger}</DialogTrigger>
-          <VisuallyHidden asChild>
-            <DialogContent
-              aria-describedby={undefined}
-              className="bg-themeBlack border-themeDarkGray"
-            >
+          <DialogContent className="bg-themeBlack border-themeDarkGray">
+            <VisuallyHidden asChild>
               <DialogTitle></DialogTitle>
-              <div className="flex justify-center gap-3 ">
-                <div className="w-12 h-12 relative">
-                  <Image
-                    src={`https://ucarecdn.com/2c9bd4ab-1f00-41df-bad2-df668f65a232/`}
-                    fill
-                    alt="Corinna"
-                  />
-                </div>
-                <div className="text-gray-400">
-                  <ArrowLeft size={20} />
-                  <ArrowRight size={20} />
-                </div>
-                <div className="w-12 h-12 relative">
-                  <Image
-                    src={`https://ucarecdn.com/${logo}/`}
-                    fill
-                    alt="Stripe"
-                  />
-                </div>
+            </VisuallyHidden>
+            <div className="flex justify-center gap-3 ">
+              <div className="w-12 h-12 relative">
+                <Image src={EuropaLogo} width={60} height={60} alt="Europa" />
               </div>
-              <DialogHeader className="flex items-center">
-                <DialogTitle className="text-xl">{title}</DialogTitle>
-                <DialogDescription className=" text-center">
-                  {description}
-                </DialogDescription>
-              </DialogHeader>
-              {children}
-            </DialogContent>
-          </VisuallyHidden>
+              <div className="text-gray-400">
+                <ArrowLeft size={20} />
+                <ArrowRight size={20} />
+              </div>
+              <div className="w-12 h-12 relative">
+                <Image src={logo || ""} width={60} height={60} alt="Stripe" />
+              </div>
+            </div>
+            <DialogHeader className="flex items-center">
+              <DialogTitle className="text-xl">{title}</DialogTitle>
+              <DialogDescription className=" text-center">
+                {description}
+              </DialogDescription>
+            </DialogHeader>
+            {children}
+          </DialogContent>
         </Dialog>
       );
     default:

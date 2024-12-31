@@ -71,7 +71,7 @@ const BlockTextEditor = ({
             className={cn(
               inline
                 ? onEdit && "mb-5"
-                : "border-[1px] border-themeGray bg-themeGray/50 rounded-xl w-full text-base py-5 px-10  overflow-y-scroll",
+                : "border-[1px] rounded-xl px-10 py-5 text-base border-themeGray bg-themeBlack w-full",
             )}
             initialContent={content}
             editorProps={{
@@ -81,8 +81,7 @@ const BlockTextEditor = ({
               },
 
               attributes: {
-                class:
-                  "prose prose-lg dark:prose-invert focus:outline-none max-w-full [&_h1]:text-4xl [&_h2]:text-3xl [&_blockquote]:text-xl [&_p]:text-lg [&_h3]:text-2xl [&_h4]:text-xl [&_ul]:text-lg [&_ol]:text-lg [&_li]:text-lg [&_a]:text-themeTextBlue [&_code]:text-sm [&_pre]:text-sm [&_strike]:text-sm [&_em]:text-sm [&_strong]:text-sm [&_s]:text-sm text-themeTextGray ",
+                class: `prose prose-lg dark:prose-invert focus:outline-none max-w-full [&_h1]:text-4xl [&_h2]:text-3xl [&_h3]:text-2xl text-themeTextGray`,
               },
             }}
             onUpdate={({ editor }) => {
@@ -105,10 +104,7 @@ const BlockTextEditor = ({
               Image,
             ]}
           >
-            <EditorCommand
-              className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background
-             px-1 py-2 shadow-md transition-all "
-            >
+            <EditorCommand className="z-50 h-auto max-h-[330px]  w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
               <EditorCommandEmpty className="px-2 text-muted-foreground">
                 No commands available
               </EditorCommandEmpty>
@@ -116,10 +112,10 @@ const BlockTextEditor = ({
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 suggestionItems.map((item: any) => (
                   <EditorCommandItem
-                    key={item.title}
+                    value={item.title}
                     onCommand={(val) => item.command(val)}
-                    className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-sm text-left hover:bg-accent
-                    aria-selected:bg-accent"
+                    className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent `}
+                    key={item.title}
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-md border border-muted bg-background">
                       {item.icon}

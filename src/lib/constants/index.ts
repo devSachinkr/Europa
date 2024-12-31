@@ -7,6 +7,8 @@ import {
   GROUP_PAGE_MENU_PROPS,
   GROUP_PLACEHOLDER,
   GroupPlaceholderProps,
+  INTEGRATION_LIST,
+  INTEGRATION_LIST_PROPS,
   MENU_PROPS,
   SIDEBAR_SETTINGS_MENU,
 } from "./schema";
@@ -19,6 +21,7 @@ type EUROPA_CONSTANTS_TYPES = {
   sidebarSettingsMenu: MENU_PROPS[];
   iconList: ICON_LIST_PROPS[];
   groupPageMenu: GROUP_PAGE_MENU_PROPS[];
+  integrationList: INTEGRATION_LIST_PROPS[];
 };
 export const EUROPA_CONSTANTS: EUROPA_CONSTANTS_TYPES = {
   signInForm: SIGN_IN_FORM,
@@ -28,4 +31,5 @@ export const EUROPA_CONSTANTS: EUROPA_CONSTANTS_TYPES = {
   sidebarSettingsMenu: SIDEBAR_SETTINGS_MENU,
   iconList: ICON_LIST,
   groupPageMenu: GROUP_PAGE_MENU,
+  integrationList: INTEGRATION_LIST,
 };

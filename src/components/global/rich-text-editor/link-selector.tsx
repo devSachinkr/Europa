@@ -39,7 +39,6 @@ export const LinkSelector = ({ open, setOpen }: LinkSelectorProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { editor } = useEditor();
 
-  // Autofocus on input by default
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     inputRef.current && inputRef.current?.focus();

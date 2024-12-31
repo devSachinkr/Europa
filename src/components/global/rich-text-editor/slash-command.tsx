@@ -163,8 +163,8 @@ export const suggestionItems = createSuggestionItems([
   },
 
   {
-    title: "Video",
-    description: "Insert a video",
+    title: "Loom/Video",
+    description: "Embed video",
     searchTerms: ["video", "media"],
     icon: <VideoIcon size={18} />,
     command: ({ editor, range }) => {

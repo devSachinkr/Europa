@@ -38,7 +38,7 @@ const page = async (props: Props) => {
                         You were referred by{" "}
                         <Avatar>
                             <AvatarImage
-                                src={affiliateInfo.data?.Group?.User?.image!}
+                                src={affiliateInfo.data?.Group?.User?.image as string}
                                 alt="User"
                             />
                             <AvatarFallback>US</AvatarFallback>

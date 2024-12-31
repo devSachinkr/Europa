@@ -187,7 +187,7 @@ export type GROUP_PAGE_MENU_PROPS = {
 };
 
 export const GROUP_PAGE_MENU: GROUP_PAGE_MENU_PROPS[] = [
-   {
+  {
     id: 0,
     label: "Group",
     icon: Home,
@@ -224,5 +224,26 @@ export const GROUP_PAGE_MENU: GROUP_PAGE_MENU_PROPS[] = [
     label: "Huddle",
     icon: Chat,
     path: "/explore",
+  },
+];
+
+export type INTEGRATION_LIST_PROPS = {
+  id: string;
+  name: "Stripe";
+  description: string;
+  logo: string;
+  modalDescription: string;
+  title: string;
+};
+export const INTEGRATION_LIST: INTEGRATION_LIST_PROPS[] = [
+  {
+    id: "1",
+    name: "Stripe",
+    description:
+      "Payment Integration | Stripe is a payment processing platform that allows you to accept a wide range of payment methods, including credit cards, debit cards, and digital wallets.",
+    logo: "914be637-39bf-47e6-bb81-37b553163945",
+    modalDescription:
+      "The world's most popular payment gateway and successfull payment processor and marketplaces including Shand DoorDash, use Stripe to accept payments from customers all over the world.",
+    title: "Connect with Stripe",
   },
 ];

@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
+import { Section } from "@prisma/client";
 
 export const getGroupCourses = async ({ groupId }: { groupId: string }) => {
   if (!groupId) return { status: 404 };
@@ -206,4 +207,32 @@ export const createModuleSection = async ({
     console.log(error);
     return { status: 500, message: "Internal Server Error" };
   }
+};
+
+export const updateCourseSectionContent = async ({
+  sectionId,
+  data,
+}: {
+  sectionId: string;
+  data: Partial<Section>;
+}) => {
+  if (!sectionId) return { status: 404, message: "Section ID Missing" };
+ try {
+   const res = await db.section.update({
+     where: {
+       id: sectionId,
+     },
+     data: {
+       ...data,
+     },
+   });
+   if (res) {
+     return { status: 200, message: "Section Updated" };
+   }
+   return { status: 400, message: "Something went wrong!" };
+  
+ } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+ }
 };

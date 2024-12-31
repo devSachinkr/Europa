@@ -627,3 +627,112 @@ export const createCourseModule = async ({
     return { status: 500, message: "Internal Server Error" };
   }
 };
+
+export const getAffiliate = async ({ groupId }: { groupId: string }) => {
+  if (!groupId) return { status: 404 };
+  try {
+    const res = await db.affiliate.findUnique({
+      where: { groupId },
+      select: {
+        id: true,
+      },
+    });
+    if (res) return { status: 200, data: res };
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const verifyAffiliate = async ({ id }: { id: string }) => {
+  if (!id) return { status: 404 };
+  try {
+    const res = await db.affiliate.findUnique({
+      where: { id },
+    });
+
+    if (res) return { status: 200, data: res };
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const getAllGroupChat = async ({ groupId }: { groupId: string }) => {
+  try {
+    const user = await authUser();
+    if (!groupId || !user.id) return { status: 404 };
+    const res = await db.members.findMany({
+      where: {
+        groupId,
+        NOT: {
+          userId: user.id,
+        },
+      },
+      include: {
+        User: true,
+      },
+    });
+    if (res && res.length) {
+      return {
+        status: 200,
+        data: res,
+      };
+    }
+    return { status: 404, message: "Category not found", data: [] };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const getUserMembership = async ({ chatId }: { chatId: string }) => {
+  if (!chatId) return { status: 404 };
+  try {
+    const res = await db.members.findUnique({
+      where: {
+        id: chatId,
+      },
+      select: {
+        User: true,
+      },
+    });
+    if (res) {
+      return {
+        status: 200,
+        data: res,
+      };
+    }
+    return { status: 404 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const onGetAllUserMessages = async ({receiverId}:{receiverId: string}) => {
+  try {
+    const sender = await authUser();
+    const messages = await db.message.findMany({
+      where: {
+        senderid: {
+          in: [sender.id!, receiverId],
+        },
+        recieverId: {
+          in: [sender.id!, receiverId],
+        },
+      },
+    });
+
+    if (messages && messages.length > 0) {
+      return { status: 200, messages };
+    }
+
+    return { status: 404 };
+  } catch (error) {
+    console.log(error);
+    return { status: 400, message: "Oops something went wrong" };
+  }
+};
