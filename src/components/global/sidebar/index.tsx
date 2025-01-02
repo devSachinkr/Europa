@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { Button } from "@/components/ui/button";
-import { useGroupChat } from "@/hooks/chat";
 import { useSidebar } from "@/hooks/sidebar";
 import { CarotSort } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -64,7 +63,6 @@ export interface IGroups {
 const Sidebar = ({ groupId, userId, mobile }: Props) => {
   const { isPending, channels, groups, groupInfo, mutate, variables } =
     useSidebar({ groupId });
-  useGroupChat({ userId });
   const pathname = usePathname();
   return (
     <div

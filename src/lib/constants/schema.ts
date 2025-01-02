@@ -1,6 +1,6 @@
 import {
   AffiliateDuoToneBlack,
-  Buisness,
+  
   Chat,
   Courses,
   CreditCard,
@@ -204,7 +204,7 @@ export const GROUP_PAGE_MENU: GROUP_PAGE_MENU_PROPS[] = [
   {
     id: 2,
     label: "Events",
-    icon: Buisness,
+    icon: Business,
     path: "/explore",
   },
   {

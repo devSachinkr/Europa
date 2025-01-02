@@ -168,9 +168,9 @@ model Message {
   id         String   @id @db.Uuid
   message    String
   createdAt  DateTime @default(now())
-  sender     User?    @relation(fields: [senderid], references: [id], onDelete: Cascade)
-  senderid   String?  @db.Uuid
-  recieverId String?  @db.Uuid
+  sender     User?    @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId   String?  @db.Uuid
+  receiverId String?  @db.Uuid
 }
 
 enum GROUP_PRIVACY {

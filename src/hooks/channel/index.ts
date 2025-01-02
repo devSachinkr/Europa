@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { z } from "zod";
 import { createPost } from "../../actions/channel";
+import { getPostComments } from "@/actions/group";
 
 export const useChannel = () => {
   const channelRef = useRef<HTMLAnchorElement | null>(null);
@@ -258,3 +259,13 @@ export const useLikeChannelPost = ({ postId }: { postId: string }) => {
   });
   return { isPending, mutate };
 };
+
+export const useComments = ({ postId }: { postId: string }) => {
+  const { data } = useQuery({
+    queryKey: ["post-comments"],
+    queryFn: () => {
+      return getPostComments({ postId });
+    },
+  });
+  return { data };
+}

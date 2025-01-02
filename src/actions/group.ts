@@ -712,15 +712,19 @@ export const getUserMembership = async ({ chatId }: { chatId: string }) => {
   }
 };
 
-export const onGetAllUserMessages = async ({receiverId}:{receiverId: string}) => {
+export const onGetAllUserMessages = async ({
+  receiverId,
+}: {
+  receiverId: string;
+}) => {
   try {
     const sender = await authUser();
     const messages = await db.message.findMany({
       where: {
-        senderid: {
+        senderId: {
           in: [sender.id!, receiverId],
         },
-        recieverId: {
+        receiverId: {
           in: [sender.id!, receiverId],
         },
       },
@@ -731,6 +735,140 @@ export const onGetAllUserMessages = async ({receiverId}:{receiverId: string}) =>
     }
 
     return { status: 404 };
+  } catch (error) {
+    console.log(error);
+    return { status: 400, message: "Oops something went wrong" };
+  }
+};
+
+export const sendMessage = async ({
+  receiverId,
+  message,
+  messageId,
+}: {
+  receiverId: string;
+  message: string;
+  messageId: string;
+}) => {
+  try {
+    const user = await authUser();
+    if (!user.id) return { status: 404, message: "User not found" };
+
+    const res = await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        message: {
+          create: {
+            message,
+            id: messageId,
+            receiverId,
+          },
+        },
+      },
+    });
+    if (res) {
+      return { status: 200, message: "Message Sent Successfully" };
+    }
+    return { status: 400, message: "Message Send Failed" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+export const getPostInfo = async ({ postId }: { postId: string }) => {
+  if (!postId) return { status: 404 };
+  try {
+    const user = await authUser();
+    if (!user.id) return { status: 404 };
+    const res = await db.post.findUnique({
+      where: { id: postId },
+      include: {
+        channel: true,
+        author: true,
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+        likes: {
+          where: {
+            userId: user.id,
+          },
+          select: {
+            userId: true,
+            id: true,
+          },
+        },
+        comments: true,
+      },
+    });
+    if (res) return { status: 200, data: res };
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const getPostComments = async ({ postId }: { postId: string }) => {
+  if (!postId) return { status: 404 };
+  try {
+    const res = await db.comment.findMany({
+      where: {
+        postId,
+        replied: false,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: true,
+        _count: {
+          select: {
+            reply: true,
+          },
+        },
+      },
+    });
+    if (res && res.length) {
+      return { status: 200, data: res };
+    }
+    return { status: 400 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};
+
+export const getCommentReplies = async ({
+  commentId,
+}: {
+  commentId: string;
+}) => {
+  if (!commentId) return { status: 404 };
+  try {
+    const replies = await db.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+      select: {
+        reply: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (replies && replies.reply.length > 0) {
+      return { status: 200, replies: replies.reply };
+    }
+    return { status: 404 };
+    return { status: 404, message: "No replies found" };
   } catch (error) {
     console.log(error);
     return { status: 400, message: "Oops something went wrong" };

@@ -26,7 +26,7 @@ const GroupList = dynamic(
         ssr: false,
     },
 );
-const PaymentForm = ({ affiliate, stripeId, userID }: Props) => {
+const PaymentForm = ({ affiliate, userID }: Props) => {
     const {
         onSubmit,
         isPending,

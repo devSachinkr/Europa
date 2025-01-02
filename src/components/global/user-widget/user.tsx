@@ -1,10 +1,6 @@
 "use client";
-import { supabaseClient } from "@/lib/supabase/client";
-import { onoffline } from "@/redux/slices/online-member";
-import { AppDispatch } from "@/redux/store";
 import { useClerk } from "@clerk/nextjs";
 import React from "react";
-import { useDispatch } from "react-redux";
 import Dropdown from "../drop-down";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
@@ -17,19 +13,11 @@ type Props = {
   groupId: string;
 };
 
-const User = ({ groupId, image, userId }: Props) => {
+const User = ({ groupId, image }: Props) => {
   const { signOut } = useClerk();
-  const unTrackPresence = async () => {
-    await supabaseClient().channel("tracking").untrack();
-  };
-  const dispatch: AppDispatch = useDispatch();
+ 
   const logout = async () => {
-    unTrackPresence();
-    dispatch(
-      onoffline({
-        members: [{ id: userId }],
-      }),
-    );
+    
     signOut({ redirectUrl: "/" });
   };
   return (

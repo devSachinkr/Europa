@@ -15,7 +15,6 @@ type Props = {
 
 const AboutGroupInfo = ({ userId, groupId }: Props) => {
   const { group } = useGroupInfo();
-  console.log(group);
   const {
     onDescription,
     onJsonDescription,

@@ -210,3 +210,71 @@ export const likePost = async ({
     return { status: 500, message: "Internal Server Error" };
   }
 };
+
+export const createComment = async ({
+  postId,
+  content,
+  commentId,
+}: {
+  postId: string;
+  content: string;
+  commentId: string;
+}) => {
+  const user = await authUser();
+  if (!user.id) return { status: 404, message: "User not found" };
+  try {
+    const res = await db.post.update({
+      where: { id: postId },
+      data: {
+        comments: {
+          create: {
+            id: commentId,
+            content,
+            userId: user.id,
+          },
+        },
+      },
+    });
+    if (res) return { status: 200, message: "Comment created" };
+    return { status: 400, message: "Something went wrong" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};
+
+export const createCommentReply = async ({
+  postId,
+  commentId,
+  content,
+  replyId,
+}: {
+  postId: string;
+  commentId: string;
+  content: string;
+  replyId: string;
+}) => {
+  try {
+    const user = await authUser();
+    if (!user.id) return { status: 404, message: "User not found" };
+    const res = await db.comment.update({
+      where: { id: commentId },
+      data: {
+        reply: {
+          create: {
+            id: replyId,
+            content,
+            userId: user.id,
+            replied: true,
+            postId,
+          },
+        },
+      },
+    });
+    if (res) return { status: 200, message: "Reply created" };
+    return { status: 400, message: "Something went wrong" };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, message: "Internal Server Error" };
+  }
+};
