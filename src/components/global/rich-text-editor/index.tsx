@@ -2,7 +2,7 @@
 import { EditorCommandEmpty, JSONContent } from "novel";
 import React from "react";
 import { FieldErrors } from "react-hook-form";
-import HtmlParser from "@/components/global/html-parser";
+import { HtmlParser } from "@/components/global/html-parser";
 import { CharacterCount, handleCommandNavigation } from "novel/extensions";
 import Placeholder from "@tiptap/extension-placeholder";
 
@@ -64,7 +64,7 @@ const BlockTextEditor = ({
   return (
     <div>
       {htmlContent && !onEdit && inline ? (
-        <HtmlParser html={htmlContent} />
+        <HtmlParser html={htmlContent || "<></>"} />
       ) : (
         <EditorRoot>
           <EditorContent

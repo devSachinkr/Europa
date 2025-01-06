@@ -1,6 +1,6 @@
 "use client";
 import GradientText from "@/components/global/gradient-text";
-import HtmlParser from "@/components/global/html-parser";
+import { HtmlParser } from "@/components/global/html-parser";
 import Interactions from "@/components/global/post-card/interactions";
 import PostAuthor from "@/components/global/post-card/post-author";
 import { useGetPost } from "@/hooks/post";
@@ -34,7 +34,7 @@ const PostInfo = ({ postId }: Props) => {
         <GradientText element="H2" className="text-2xl font-bold">
           {postInfo?.data?.title}
         </GradientText>
-        <HtmlParser html={postInfo?.data?.htmlContent as string} />
+        <HtmlParser html={postInfo?.data?.htmlContent as string || "<></>"} />
       </div>
       <Interactions
         id={postId}

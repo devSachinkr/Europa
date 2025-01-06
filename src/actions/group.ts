@@ -874,3 +874,33 @@ export const getCommentReplies = async ({
     return { status: 400, message: "Oops something went wrong" };
   }
 };
+
+export const getEnrolledGroups = async ({ groupId }: { groupId: string }) => {
+  if (!groupId) return { status: 404 };
+  try {
+    const user = await authUser();
+    if (!user.id) return { status: 404 };
+    const res = await db.group.findMany({
+      where: {
+        id: groupId,
+        NOT: {
+          userId: user.id,
+        },
+      },
+      include: {
+        member: {
+          where: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+    if (res && res.length) {
+      return { status: 200, data: res };
+    }
+    return { status: 404 };
+  } catch (error) {
+    console.log(error);
+    return { status: 500 };
+  }
+};

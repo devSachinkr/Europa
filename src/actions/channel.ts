@@ -11,7 +11,6 @@ export const getChannelInfo = async ({ channelId }: { channelId: string }) => {
       where: { id: channelId },
       include: {
         posts: {
-          take: 3,
           orderBy: {
             createdAt: "asc",
           },

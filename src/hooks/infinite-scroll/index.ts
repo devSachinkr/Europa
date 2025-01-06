@@ -62,6 +62,7 @@ const useInfiniteScroll = ({
           }
         }
       }
+      return [];
     },
     enabled: true,
   });

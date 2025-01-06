@@ -14,7 +14,7 @@ type Props = {
 };
 
 const layout = async ({ children, params }: Props) => {
-  const { groupId, courseId, sectionId } = await params;
+  const { sectionId ,groupId} = await params;
 
   await query.prefetchQuery({
     queryKey: ["section-info"],
@@ -24,7 +24,7 @@ const layout = async ({ children, params }: Props) => {
   });
   return (
     <HydrationBoundary state={dehydrate(query)}>
-      <SectionNav sectionId={sectionId} />
+      <SectionNav groupId={groupId} sectionId={sectionId} />
       {children}
     </HydrationBoundary>
   );

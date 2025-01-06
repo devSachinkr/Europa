@@ -1,15 +1,12 @@
 "use client";
 import GlobalAccordion from "@/components/global/global-accordion";
 import { IconRenderer } from "@/components/global/icon-renderer";
-import { Loader } from "@/components/global/loader";
 import { AccordionContent } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useCourseModuleList } from "@/hooks/course-module";
 import { EmptyCircle, PurpleCheck } from "@/icons";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import { v4 } from "uuid";
 
 type Props = {
@@ -22,24 +19,19 @@ const CourseModuleList = ({ groupId, courseId }: Props) => {
     modules,
     groupInfo,
     isPending,
-    isPendingSection,
-    onEditModule,
-    onEditSection,
-    edit,
-    editSection,
     activeSection,
-    moduleId,
-    sectionVariables,
     createSectionVariables,
     triggerRef,
     contentRef,
-    inputRef,
     variables,
     pathname,
     createSection,
     isPendingCreateSection,
     setActiveSection,
-    sectionInputRef,
+    updateModuleName,
+    setModuleId,
+    register,
+    errors,
   } = useCourseModuleList({ groupId, courseId });
   return (
     <div className="flex flex-col">
@@ -48,15 +40,13 @@ const CourseModuleList = ({ groupId, courseId }: Props) => {
           <GlobalAccordion
             key={module.id}
             ref={triggerRef}
-            editable={
-              <Input
-                ref={inputRef}
-                className="bg-themeBlack border-demonGreen/60"
-              />
-            }
-            onEdit={() => onEditModule({ id: module.id })}
             id={module.id}
             title={isPending ? (variables?.content as string) : module.title}
+            setModuleId={setModuleId}
+            register={register}
+            errors={errors}
+            updateModuleName={updateModuleName}
+            isPending={isPending}
           >
             <AccordionContent className="flex flex-col gap-y-2 px-3">
               {module.section.length ? (
@@ -77,16 +67,8 @@ const CourseModuleList = ({ groupId, courseId }: Props) => {
                           : "LIGHT"
                       }
                     />
-                    {editSection && activeSection === section.id ? (
-                      <Input
-                        ref={sectionInputRef}
-                        className="flex-1 bg-transparent border-none p-0"
-                      />
-                    ) : isPendingSection && activeSection === section.id ? (
-                      sectionVariables?.content
-                    ) : (
-                      section.name
-                    )}
+
+                    {section.name}
                   </Link>
                 ))
               ) : (

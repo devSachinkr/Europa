@@ -13,7 +13,7 @@ type Props = {
 };
 
 const PostFeed = ({ channelId, userId }: Props) => {
-  const { channel, mutation } = useChannelPage({ channelId });
+  const { channel } = useChannelPage({ channelId });
   const { posts } = channel?.data as {
     posts: ({
       likes: {

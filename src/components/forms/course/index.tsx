@@ -1,5 +1,5 @@
 "use client";
-import HtmlParser from "@/components/global/html-parser";
+import { HtmlParser } from "@/components/global/html-parser";
 import { Loader } from "@/components/global/loader";
 import BlockTextEditor from "@/components/global/rich-text-editor";
 import { Button } from "@/components/ui/button";

@@ -32,7 +32,7 @@ export const SimpleModal = ({
       return (
         <Dialog>
           <DialogTrigger asChild>{trigger}</DialogTrigger>
-          <DialogContent className="bg-themeBlack border-themeDarkGray">
+          <DialogContent className="bg-themeBlack border-themeDarkGray overflow-hidden overflow-y-scroll !max-w-2xl border-themeGray hide-scrollbar ">
             <VisuallyHidden asChild>
               <DialogTitle></DialogTitle>
             </VisuallyHidden>
@@ -63,7 +63,7 @@ export const SimpleModal = ({
         <Dialog>
           <DialogTrigger asChild>{trigger}</DialogTrigger>
           <DialogContent
-            className="bg-[#1C1C1E] overflow-hidden overflow-y-scroll !max-w-2xl border-themeGray"
+            className="bg-[#1C1C1E] overflow-hidden overflow-y-scroll !max-w-2xl border-themeGray hide-scrollbar "
             aria-describedby={undefined}
           >
             <VisuallyHidden asChild>

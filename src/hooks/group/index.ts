@@ -1,6 +1,10 @@
 "use client";
 
-import { getGroupInfo, updateGroupInfo } from "@/actions/group";
+import {
+  getEnrolledGroups,
+  getGroupInfo,
+  updateGroupInfo,
+} from "@/actions/group";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { JSONContent } from "novel";
@@ -10,7 +14,7 @@ import { z } from "zod";
 import { GroupSettingsSchema } from "@/components/forms/group/schema";
 import ToastNotify from "@/components/global/toast";
 import { upload } from "@/lib/upload-card";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { onClearList } from "@/redux/slices/infinite-scroll";
@@ -374,5 +378,17 @@ export const useGroupAboutInfo = ({
     onSetDescription,
     isPending,
     onSubmit,
+  };
+};
+
+export const useEnrolledGroups = ({ groupId }: { groupId: string }) => {
+  const { data } = useQuery({
+    queryKey: ["enrolled-groups"],
+    queryFn: () => getEnrolledGroups({ groupId }),
+  });
+  const pathname = usePathname();
+  return {
+    enrolledGroupsInfo: data?.data && data.data.length ? data.data : [],
+    pathname,
   };
 };

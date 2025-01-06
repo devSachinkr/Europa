@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import groupPlaceholderIcon from "../../../../public/assets/group_icon.svg";
 import Dropdown from "../drop-down";
 import SidebarMenu from "./menu";
+import EnrolledGroups from "./enrolled-groups";
 type Props = {
   groupId: string;
   userId: string;
@@ -151,6 +152,10 @@ const Sidebar = ({ groupId, userId, mobile }: Props) => {
           loading={isPending}
           groupUserId={groupInfo.data?.userId as string}
         />
+        <div className="flex flex-col ">
+          <p className="text-xs text-[#F7ECE9]">ENROLLED GROUPS</p>
+          <EnrolledGroups groupId={groupId} />
+        </div>
       </div>
     </div>
   );

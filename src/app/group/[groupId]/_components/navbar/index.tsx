@@ -29,7 +29,7 @@ const Navbar = async ({ groupId, userId }: Props) => {
       <Link href={`/group/create`} className="hidden md:inline">
         <Button
           variant={"outline"}
-          className="bg-themeBlack rounded-2xl flex gap-2 border-themeGray hover:text-themeGray"
+          className="bg-themeBlack rounded-2xl flex gap-2 border-themeGray hover:text-white"
         >
           <CheckBadge />
           Create Group

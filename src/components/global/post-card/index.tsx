@@ -1,13 +1,12 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 import GradientText from "../gradient-text";
-import HtmlParser from "../html-parser";
-import { Separator } from "@/components/ui/separator";
-import PostAuthor from "./post-author";
+import { HtmlParser } from "../html-parser";
 import Interactions from "./interactions";
+import PostAuthor from "./post-author";
 
 type Props = {
   channelName: string;
@@ -52,7 +51,7 @@ const PostCard = ({
             <GradientText element="H2" className="text-2xl font-bold">
               {title}
             </GradientText>
-            <HtmlParser html={html} />
+            <HtmlParser html={html || "<></>"} />
           </div>
         </Link>
       </CardContent>

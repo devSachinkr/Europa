@@ -1,5 +1,6 @@
 import { authUser } from "@/actions/auth";
 import {
+  getEnrolledGroups,
   getGroupInfo,
   getGroupsChannels,
   getGroupSubscription,
@@ -55,6 +56,13 @@ const layout = async ({ children, params }: Props) => {
   await query.prefetchQuery({
     queryKey: ["member-chats"],
     queryFn: () => getMemberChat({ groupId }),
+  });
+
+  // GET ENROLLED GROUPS
+
+  await query.prefetchQuery({
+    queryKey: ["enrolled-groups"],
+    queryFn: () => getEnrolledGroups({ groupId }),
   });
   return (
     <HydrationBoundary state={dehydrate(query)}>

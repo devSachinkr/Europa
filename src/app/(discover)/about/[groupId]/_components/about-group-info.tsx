@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import HtmlParser from "@/components/global/html-parser";
 import { Loader } from "@/components/global/loader";
 import BlockTextEditor from "@/components/global/rich-text-editor";
 import { Button } from "@/components/ui/button";
 import { useGroupAboutInfo, useGroupInfo } from "@/hooks/group";
 import { JSONContent } from "novel";
 import MediaGallery from "./media-gallery";
+import { HtmlParser } from "@/components/global/html-parser";
 
 type Props = {
   userId: string;
