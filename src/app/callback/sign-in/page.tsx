@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 const page = async () => {
     const user = await currentUser();
-    if (!user) return redirect("/sign-in");
+    if (!user?.id) return redirect("/sign-in");
 
     const auth = await signInUser({ clerkId: user.id });
 
