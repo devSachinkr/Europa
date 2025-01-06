@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
 
 import { SignInFormSchema } from "@/components/forms/auth/sign-in/schema";
 import { useSignIn, useSignUp } from "@clerk/nextjs";
