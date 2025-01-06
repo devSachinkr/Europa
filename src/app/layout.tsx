@@ -11,7 +11,7 @@ const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Europa",
-    description: "",
+    description: "Europa is a platform that empowers users to connect with like-minded individuals from around the world."
 };
 
 export default function RootLayout({
