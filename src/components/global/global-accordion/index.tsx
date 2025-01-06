@@ -23,15 +23,15 @@ type Props = {
   title: string;
   children: React.ReactNode;
   ref?: React.Ref<HTMLButtonElement>;
-  setModuleId: (id: string) => void;
-  updateModuleName: () => void;
-  register: UseFormRegister<{
+  setModuleId?: (id: string) => void;
+  updateModuleName?: () => void;
+  register?: UseFormRegister<{
     title: string;
   }>;
-  errors: FieldErrors<{
+  errors?: FieldErrors<{
     title: string;
   }>;
-  isPending: boolean;
+  isPending?: boolean;
 };
 
 const GlobalAccordion = ({
@@ -57,7 +57,9 @@ const GlobalAccordion = ({
             <SimpleModal
               trigger={
                 <div className="flex  items-center p-[5px] bg-demonGreen/60 hover:bg-demonGreen/80 text-white font-bold  rounded-full aspect-square">
-                  <Pencil size={16} onClick={() => setModuleId(id)} />
+                  {setModuleId && (
+                    <Pencil size={16} onClick={() => setModuleId(id)} />
+                  )}
                 </div>
               }
             >
@@ -73,20 +75,22 @@ const GlobalAccordion = ({
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <FormGenerator
-                    register={register}
-                    errors={errors}
-                    inputType="input"
-                    label="Module Name"
-                    name="title"
-                    placeholder="Enter Module Name"
-                    type="text"
-                  />
+                  {register && errors && (
+                    <FormGenerator
+                      register={register}
+                      errors={errors}
+                      inputType="input"
+                      label="Module Name"
+                      name="title"
+                      placeholder="Enter Module Name"
+                      type="text"
+                    />
+                  )}
                   <Button
                     className="bg-demonGreen border-demonGreen/60 hover:bg-demonGreen/80 transition duration-100 cursor-pointer  border-dashed aspect-video rounded-xl flex justify-center items-center"
                     onClick={updateModuleName}
                   >
-                    <Loader loading={isPending}>Save</Loader>
+                    <Loader loading={isPending || false}>Save</Loader>
                   </Button>
                 </CardContent>
               </Card>

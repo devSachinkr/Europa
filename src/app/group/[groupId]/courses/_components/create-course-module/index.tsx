@@ -26,7 +26,7 @@ const CreateCourseModule = ({ groupId, courseId }: Props) => {
         />
       </div>
       {variables && isPending && (
-        <GlobalAccordion id={variables.moduleId} title={variables.title}>
+        <GlobalAccordion  id={variables.moduleId} title={variables.title}>
           <Button
             variant={"outline"}
             className="bg-transparent border-demonGreen/60 hover:bg-themeBlack transition duration-100 cursor-pointer  border-dashed aspect-video rounded-xl flex justify-center items-center"
