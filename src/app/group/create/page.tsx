@@ -5,16 +5,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
 import React from "react";
 
-type Props = Promise<{
+type Props = {
     params: {
         [affiliate: string]: string;
     };
-}>;
+}
 
 const page = async (props: Props) => {
     const {
         params: { affiliate },
-    } = await props;
+    } = props;
     const user = await authUser();
     const affiliateInfo = await getAffiliateInfo({ affiliate });
     if (!user || !user.id) return redirect("/sign-in");
