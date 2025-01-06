@@ -4,12 +4,11 @@ import GradientText from "@/components/global/gradient-text";
 import { EUROPA_CONSTANTS } from "@/lib/constants";
 import React from "react";
 
-type Props = Promise<{
+type Props ={
     children: React.ReactNode;
-}>;
+};
 
-const layout = async (props: Props) => {
-    const { children } = await props;
+const layout = async ({children}: Props) => {
     return (
         <div className="container h-screen grid grid-cols-1 lg:grid-cols-2 content-center">
             <div className="flex items-center">
