@@ -6,14 +6,14 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = Promise<{
-    searchParams: {
+    params: {
         [affiliate: string]: string;
     };
 }>;
 
 const page = async (props: Props) => {
     const {
-        searchParams: { affiliate },
+        params: { affiliate },
     } = await props;
     const user = await authUser();
     const affiliateInfo = await getAffiliateInfo({ affiliate });
