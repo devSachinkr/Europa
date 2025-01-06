@@ -12,7 +12,7 @@ const page = async () => {
     if (auth.status === 207)
         return redirect(`/group/${auth.groupId}/channel/${auth.channelId}`);
 
-    if (auth.status !== 200) return redirect(`/sign-in/${auth.status}/${auth.message}`);
+    if (auth.status !== 200) return redirect(`/sign-in/`);
 };
 
 export default page;
