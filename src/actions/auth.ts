@@ -106,7 +106,7 @@ export const signInUser = async ({ clerkId }: { clerkId: string }) => {
                 id: res.id,
             };
         }
-        return { status: 400, message: "User could not be found or signed in" };
+        return { status: 404, message: "User could not be found or signed in" };
     } catch (error) {
         console.log(error);
         return { status: 500, message: "Something went wrong" };
