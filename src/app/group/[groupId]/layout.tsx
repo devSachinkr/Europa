@@ -34,7 +34,7 @@ const layout = async ({ children, params }: Props) => {
   // GET ALL USER GROUPS_INFO
   await query.prefetchQuery({
     queryKey: ["user-groups"],
-    queryFn: () => getUserGroups({ userID: user.id }),
+    queryFn: () => getUserGroups({ userID: user.id! }),
   });
 
   // GET CHANNELS
