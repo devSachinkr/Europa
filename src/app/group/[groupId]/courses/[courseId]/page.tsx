@@ -1,16 +1,14 @@
 
 
-import React from "react";
 
-type Props = {
-  params: Promise<{
-    groupId: string;
-    courseId: string;
-  }>;
-};
+// type Props = {
+//   params: Promise<{
+//     groupId: string;
+//     courseId: string;
+//   }>;
+// };
 
-const page = async ({ params }: Props) => {
-  const { groupId, courseId } = await params;
+const page = async () => {
   
   return <div>page</div>;
 };

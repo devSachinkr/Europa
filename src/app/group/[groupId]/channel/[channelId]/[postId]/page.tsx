@@ -1,11 +1,11 @@
 import { authUser } from "@/actions/auth";
 import { getPostComments, getPostInfo } from "@/actions/group";
+import PostCommentsForm from "@/components/forms/post-comments";
+import GroupSideWidget from "@/components/global/group-side-widget";
+import PostComments from "@/components/global/user-comment";
 import { query } from "@/react-query/query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import PostInfo from "./_components/post-info";
-import GroupSideWidget from "@/components/global/group-side-widget";
-import PostCommentsForm from "@/components/forms/post-comments";
-import PostComments from "@/components/global/user-comment";
 
 // import { query } from "@/react-query/query-client";
 // import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -20,7 +20,7 @@ type Props = {
 };
 
 const page = async ({ params }: Props) => {
-  const { postId,groupId } = await params;
+  const { postId} = await params;
   await query.prefetchQuery({
     queryKey: ["unique-post"],
     queryFn: () => {

@@ -7,7 +7,7 @@ type Props = {
   groupId: string;
 };
 
-const StripeConnect = ({ connected, groupId }: Props) => {
+const StripeConnect = ({ connected }: Props) => {
 //   const { stripeAccPending, stripeConnect } = useStripeAccount({ groupId });
   return (
     <Button

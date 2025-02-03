@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Textarea } from "@/components/ui/textarea";
 import { ErrorMessage } from "@hookform/error-message";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
